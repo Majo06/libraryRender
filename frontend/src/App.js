@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000'; // Valor por defecto
+const API_URL = process.env.REACT_APP_API_URL || 'https://libraryrender-kx7f.onrender.com'; // Valor por defecto
 
 
 function App() {

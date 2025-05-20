@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 // Configuración de CORS
 const allowedOrigins = [
   'http://localhost:3001', // Frontend en desarrollo
-  'https://tu-frontend.onrender.com' // Reemplaza con la URL de Render
+  'https://libraryrender-1.onrender.com' // Reemplaza con la URL de Render
 ];
 
 app.use(cors({
