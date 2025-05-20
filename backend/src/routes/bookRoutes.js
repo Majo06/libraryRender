@@ -24,17 +24,6 @@ router.get('/', async (req, res) => {
 });
 
 // Obtener un libro por ISBN
-router.get('/:isbn', async (req, res) => {
-    try {
-        const book = await Book.findOne({ isbn: req.params.isbn });
-        if (!book) return res.status(404).json({ message: 'Book not found' });
-        res.json(book);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-// Actualizar un libro
 router.put('/:isbn', async (req, res) => {
     try {
         const book = await Book.findOneAndUpdate(
@@ -42,13 +31,48 @@ router.put('/:isbn', async (req, res) => {
             req.body,
             { new: true }
         );
-        if (!book) return res.status(404).json({ message: 'Book not found' });
-        res.json(book);
+        
+        if (!book) {
+            return res.status(404).json({ 
+                success: false,
+                message: `Book with ISBN ${req.params.isbn} not found`
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: book
+        });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(400).json({ 
+            success: false,
+            message: err.message 
+        });
     }
 });
 
+router.delete('/:isbn', async (req, res) => {
+    try {
+        const book = await Book.findOneAndDelete({ isbn: req.params.isbn });
+        
+        if (!book) {
+            return res.status(404).json({ 
+                success: false,
+                message: `Book with ISBN ${req.params.isbn} not found`
+            });
+        }
+        
+        res.json({ 
+            success: true,
+            message: 'Book deleted successfully' 
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false,
+            message: err.message 
+        });
+    }
+});
 // Eliminar un libro
 router.delete('/:isbn', async (req, res) => {
     try {
