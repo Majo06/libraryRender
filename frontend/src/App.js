@@ -50,7 +50,12 @@ function App() {
         }
     };
 
-    const toggleAvailability = async (isbn, available) => {
+const toggleAvailability = async (isbn, available) => {
+  if (!isbn) {
+    alert('No ISBN provided');
+    return;
+  }
+
   try {
     const exists = await checkBookExists(isbn);
     if (!exists) {
@@ -69,7 +74,7 @@ function App() {
       throw new Error(errorData.message || 'Failed to update book');
     }
 
-    fetchBooks();
+    fetchBooks(); // Refresh the book list
   } catch (err) {
     console.error('Error updating book:', err);
     alert(`Error: ${err.message}`);
@@ -77,6 +82,11 @@ function App() {
 };
 
 const deleteBook = async (isbn) => {
+  if (!isbn) {
+    alert('No ISBN provided');
+    return;
+  }
+
   try {
     const exists = await checkBookExists(isbn);
     if (!exists) {
@@ -93,11 +103,26 @@ const deleteBook = async (isbn) => {
       throw new Error(errorData.message || 'Failed to delete book');
     }
 
-    fetchBooks();
+    fetchBooks(); // Refresh the book list
     alert('Book deleted successfully!');
   } catch (err) {
     console.error('Error deleting book:', err);
     alert(`Error: ${err.message}`);
+  }
+};
+
+// Añade esta función junto con tus otras funciones
+const checkBookExists = async (isbn) => {
+  try {
+    const response = await fetch(`${API_URL}/api/books/${isbn}`);
+    if (!response.ok) {
+      return false;
+    }
+    const data = await response.json();
+    return data !== null;
+  } catch (err) {
+    console.error('Error checking book existence:', err);
+    return false;
   }
 };
     return (
