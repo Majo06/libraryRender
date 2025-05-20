@@ -51,29 +51,55 @@ function App() {
     };
 
     const toggleAvailability = async (isbn, available) => {
-        try {
-            const response = await fetch(`${API_URL}/api/books/${isbn}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ available: !available })
-            });
-            if (response.ok) fetchBooks();
-        } catch (err) {
-            console.error('Error updating book:', err);
-        }
-    };
+  try {
+    const exists = await checkBookExists(isbn);
+    if (!exists) {
+      alert('Book not found!');
+      return;
+    }
 
-    const deleteBook = async (isbn) => {
-        try {
-            const response = await fetch(`${API_URL}/api/books/${isbn}`, {
-                method: 'DELETE'
-            });
-            if (response.ok) fetchBooks();
-        } catch (err) {
-            console.error('Error deleting book:', err);
-        }
-    };
+    const response = await fetch(`${API_URL}/api/books/${isbn}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ available: !available })
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to update book');
+    }
+
+    fetchBooks();
+  } catch (err) {
+    console.error('Error updating book:', err);
+    alert(`Error: ${err.message}`);
+  }
+};
+
+const deleteBook = async (isbn) => {
+  try {
+    const exists = await checkBookExists(isbn);
+    if (!exists) {
+      alert('Book not found!');
+      return;
+    }
+
+    const response = await fetch(`${API_URL}/api/books/${isbn}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to delete book');
+    }
+
+    fetchBooks();
+    alert('Book deleted successfully!');
+  } catch (err) {
+    console.error('Error deleting book:', err);
+    alert(`Error: ${err.message}`);
+  }
+};
     return (
         <div className="p-6 max-w-4xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-center">Library Management</h1>
