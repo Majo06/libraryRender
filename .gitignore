@@ -1,0 +1,20 @@
+# Dependencias
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Archivos de entorno
+.env
+frontend/.env
+backend/.env
+.env.local
+.env.development
+.env.production
+
+# Archivos de build
+frontend/build/
+dist/
+
+# Archivos de logs y temporales
+*.log
+.DS_Store
